@@ -109,3 +109,5 @@ output.png
 vgg/saved_model.pb
 test.png
 project_video.mp4
+challenge_results.mp4
+myfcnn_epoch0.pb

@@ -3,7 +3,7 @@ import tensorflow as tf
 import cv2
 import numpy as np
 import scipy
-#from moviepy.editor import VideoFileClip
+from moviepy.editor import VideoFileClip
 
 GRAPH_FILE='./myfcnn.pb'
 def load_graph(graph_file):
@@ -19,7 +19,12 @@ def load_graph(graph_file):
 
 def frame_infer(clip, sess, input_tensor, output_tensor, keepprob_tensor, image_shape):
     def process_frame(image):
-        return infer(image, sess, input_tensor, output_tensor, keepprob_tensor, image_shape)
+        print ("got image", image.shape)
+        orig_size = image.shape[0:2]
+        img = scipy.misc.imresize(image, image_shape)
+        res=  infer(sess, input_tensor, output_tensor, keepprob_tensor, image_shape, img)
+        res = scipy.misc.imresize(image, orig_size)
+        return res
     return clip.fl_image(process_frame)
 
 
@@ -67,9 +72,9 @@ def run():
 
         scipy.misc.imsave("output.png", outimg)
 
-        #clip1 = VideoFileClip('./project_video.mp4')#.subclip(1, 20)
-        #projectClip = clip1.fx(frame_infer, sess, input_tensor, output_tensor, keepprob_tensor, image_shape)
-        #projectClip.write_videofile('./challenge_results.mp4', audio=False)
+        clip1 = VideoFileClip('./project_video.mp4').subclip(1, 1.5)
+        projectClip = clip1.fx(frame_infer, sess, input_tensor, output_tensor, keepprob_tensor, (288,512))
+        projectClip.write_videofile('./challenge_results.mp4', audio=False)
 
 
 if __name__ == '__main__':
