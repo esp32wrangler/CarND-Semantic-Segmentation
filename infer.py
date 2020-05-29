@@ -22,8 +22,8 @@ def frame_infer(clip, sess, input_tensor, output_tensor, keepprob_tensor, image_
         print ("got image", image.shape)
         orig_size = image.shape[0:2]
         img = scipy.misc.imresize(image, image_shape)
-        res=  infer(sess, input_tensor, output_tensor, keepprob_tensor, image_shape, img)
-        res = scipy.misc.imresize(image, orig_size)
+        res = infer(sess, input_tensor, output_tensor, keepprob_tensor, image_shape, img)
+        res = scipy.misc.imresize(res, orig_size)
         return res
     return clip.fl_image(process_frame)
 
